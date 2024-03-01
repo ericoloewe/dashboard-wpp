@@ -80,6 +80,6 @@ function runReady(win, client) {
       })
     }
 
-    win.webContents.send('contacts-loaded', groups)
+    win.webContents.send('groups-loaded', groups)
   })
 }

@@ -1,17 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.scss';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Home } from './home';
+import { Groups } from './groups';
+import { Login } from './login';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 if (typeof (window.electronAPI) === 'undefined') {
   document.getElementById('root').innerHTML = "Invalid browser, you have to use electron";
 } else {
+  const router = createBrowserRouter([
+    {
+      path: "/home",
+      element: <Home />,
+    },
+    {
+      path: "/group-details",
+      element: <Groups />,
+    },
+    {
+      path: "/",
+      element: <Login />,
+    },
+  ]);
+
   root.render(
     <React.StrictMode>
-      <App />
+      <RouterProvider router={router} />
     </React.StrictMode>
   );
 }
