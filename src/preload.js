@@ -13,6 +13,12 @@ window.addEventListener('DOMContentLoaded', () => {
 const { contextBridge, ipcRenderer } = require('electron/renderer')
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  send: (name, data) => ipcRenderer.send(name, data),
-  on: (name, args) => ipcRenderer.on(name, args)
+  send: (channel, data) => ipcRenderer.send(channel, data),
+  on: (channel, subscription) => {
+    ipcRenderer.on(channel, subscription)
+
+    return () => {
+      ipcRenderer.removeListener(channel, subscription);
+    };
+  }
 })

@@ -1,15 +1,19 @@
-@import "../node_modules/bootstrap/scss/bootstrap.scss";
+@import "_bootstrap";
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@import "../node_modules/bootstrap/scss/pagination";
+@import "../node_modules/bootstrap/scss/forms/form-select";
+@import "../node_modules/bootstrap/scss/forms/form-control";
+@import "../node_modules/bootstrap/scss/forms/labels";
+@import "../node_modules/bootstrap/scss/buttons";
+@import "../node_modules/bootstrap/scss/nav";
+@import "../node_modules/bootstrap/scss/navbar";
+@import "../node_modules/bootstrap/scss/alert";
+@import "../node_modules/bootstrap/scss/card";
+@import "../node_modules/bootstrap/scss/spinners";
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+
+body, #root {
+  // background-color: #282c34;
+  // color: white;
+  min-height: 100vh;
 }

@@ -1,5 +1,10 @@
+@import "_bootstrap";
+
 .App {
-  text-align: center;
+}
+
+.dashboard {
+  display: flex;
 }
 
 .App-logo {
@@ -18,14 +23,12 @@
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
 }
 
 .App-link {
@@ -38,5 +41,96 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+
+  @include media-breakpoint-down(xlg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include media-breakpoint-down(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include media-breakpoint-down(sm) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+  border: 5px solid #dee2e6 !important;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  border-radius: 10px;
+  padding: 10px;
+  background: #fff;
+
+  &.active {
+    opacity: 1;
+  }
+
+  &.marked {
+    border-style: dashed !important;
+    border-color: #83878b !important;
+  }
+
+  > img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  > h5 {
+    text-wrap: wrap;
+    word-break: break-all;
+  }
+
+  > .participants {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 10px auto;
+
+    > img {
+      margin: -13px;
+      padding: 5px 10px;
+      border-radius: 50%;
+      width: 70px;
+      height: auto;
+    }
+  }
+}
+
+
+.mark-section {
+  display: flex;
+  padding: 20px;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+
+  > .buttons,
+  > .form-group {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    text-wrap: nowrap;
+  }
+
+  @include media-breakpoint-down(md) {
+    flex-direction: column;
   }
 }

@@ -30,29 +30,56 @@ app.on('activate', () => {
 
 const { Client, LocalAuth } = require('whatsapp-web.js');
 
-ipcMain.on('load-qrcode', (event, title) => {
+let client = null;
+
+ipcMain.on('init-login', (event, title) => {
+  console.log("init login");
+
   const webContents = event.sender
   const win = BrowserWindow.fromWebContents(webContents)
-  const client = new Client({ authStrategy: new LocalAuth() });
+
+  if (client !== null)
+    runReady(win, client);
+
+  client = new Client({ authStrategy: new LocalAuth() });
 
   client.on('qr', (qr) => {
     console.log('QR RECEIVED', qr);
     win.webContents.send('qrcode-loaded', qr);
   });
 
-  client.on('ready', () => {
-    console.log('Client is ready!');
-    win.webContents.send('whats-ready', 'ok');
-
-    client.getChats().then(response => {
-      console.log(response);
-
-
-      return win.webContents.send('contacts-loaded', response)
-    });
-  });
+  client.on('ready', () => runReady(win, client));
 
   client.initialize();
-})
+});
 
-console.log("HEREEEEE");
+function runReady(win, client) {
+  console.log('Client is ready!')
+  win.webContents.send('whats-ready', 'ok')
+
+  client.getChats().then(async (response) => {
+    console.log('contacts ok ', response.length)
+
+    const groups = response.filter(x => x.isGroup).slice(0, 6)
+    const profilesPromises = groups.map(x => client.getProfilePicUrl(x.id._serialized))
+
+    var pictures = await Promise.all(profilesPromises)
+
+    pictures.forEach((x, i) => {
+      groups[i].profilePicture = x
+    })
+
+    for (let index = 0; index < groups.length; index++) {
+      const contact = groups[index]
+      const participants = contact.groupMetadata.participants.slice(0, 5)
+
+      var participantsPictures = await Promise.all(participants.map(x => client.getProfilePicUrl(x.id._serialized)))
+
+      participantsPictures.forEach((x, i) => {
+        participants[i].profilePicture = x
+      })
+    }
+
+    win.webContents.send('contacts-loaded', groups)
+  })
+}
