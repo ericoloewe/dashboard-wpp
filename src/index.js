@@ -18,7 +18,7 @@ if (typeof (window.electronAPI) === 'undefined') {
       element: <Home />,
     },
     {
-      path: "/group-details",
+      path: "/groups/:groupId",
       element: <Groups />,
     },
     {

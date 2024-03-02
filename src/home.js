@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Card } from './card';
 import { Layout } from './layout';
+import { Link } from 'react-router-dom';
 
 export function Home() {
   const [isGroupsReady, setIsGroupsReady] = useState(false);
@@ -8,14 +8,16 @@ export function Home() {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    const removeEventListener1 = window.electronAPI.on('groups-loaded', (event, response) => {
+    const removeEventListener1 = window.electronAPI.on('chats-loaded', (event, response) => {
       const groups = response;
-
+      
       console.log(response);
-
+      
       setGroups(groups);
       setIsGroupsReady(true);
     })
+
+    window.electronAPI.send('load-chats', 'ok');
 
     return () => {
       removeEventListener1();
@@ -49,3 +51,19 @@ export function Home() {
     }
   </Layout>
 }      
+
+
+export function Card({ group }) {
+  return (
+    <Link to={`/groups/${group.id._serialized}`} className="card">
+      <img src={group.profilePicture} alt={group.name} />
+      <h4>{group.name}</h4>
+      <hr />
+      <div className='participants'>
+        {group.groupMetadata.participants.slice(0, 5).map(x => (
+          <img key={x.id.user} src={x.profilePicture} alt={x.id.user} className='rounded' />
+        ))}
+      </div>
+    </Link>
+  );
+}
