@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Home } from './home';
 import { Groups } from './groups';
 import { Login } from './login';
+import { Participants } from './participants';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -20,6 +21,10 @@ if (typeof (window.electronAPI) === 'undefined') {
     {
       path: "/groups/:groupId",
       element: <Groups />,
+    },
+    {
+      path: "/groups/:groupId/:participantId",
+      element: <Participants />
     },
     {
       path: "/",

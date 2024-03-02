@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Layout } from './layout';
 import { Link, useParams } from "react-router-dom";
+import { Loader } from './loader';
 
 export function Groups() {
   const { groupId } = useParams();
@@ -85,26 +86,22 @@ export function Groups() {
                 .filter(x => search.length === 0 || x?.contact?.name?.toLowerCase()?.includes(search))
                 .sort((a, b) => (a.messages?.length > b.messages?.length ? -1 : 1))
                 .map(x => (
-                  <Card key={x?.id?._serialized} participant={x} />
+                  <Card key={x?.id?._serialized} participant={x} groupId={groupId} />
                 ))}
             </div>
           </div>
         )
         : (
-          <div className="d-flex justify-content-center">
-            <div className="spinner-border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          </div>
+          <Loader />
         )
       }
     </div>
   </Layout>
 }
 
-export function Card({ participant }) {
+export function Card({ participant, groupId }) {
   return (
-    <Link to={`/participant/${participant.id._serialized}`} className="card">
+    <Link to={`/groups/${groupId}/${participant.id._serialized}`} className="card">
       <img src={participant.profilePicture} alt={participant?.contact?.name} />
       <h4>{participant?.contact?.name}</h4>
       <hr />
