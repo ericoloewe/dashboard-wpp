@@ -1,55 +1,34 @@
 import { useState, useEffect } from 'react';
 import { Layout } from './layout';
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Loader } from './loader';
+import moment from 'moment';
 
 export function Participants() {
   const { groupId, participantId } = useParams();
-  const [isGroupsReady, setIsGroupsReady] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const [search, setSearch] = useState('');
-  const [groupInfo, setGroupInfo] = useState({});
-  const [participantsDict, setParticipantsDict] = useState({});
+  const [info, setInfo] = useState({});
+  const [messages, setMessages] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let firstLoadOk = false;
 
     const removeEventListener1 = window.electronAPI.on('participant-info-loaded', (event, response) => {
       console.log(response);
+      setInfo(response);
 
-      setGroupInfo(response);
-
-      const dict = response.groupMetadata.participants.reduce((previous, next) => {
-        previous[next.id._serialized] = next;
-
-        return previous;
-      }, {});
-
-      setParticipantsDict({ ...dict });
-
-      window.electronAPI.send('load-participant-messages', participantId);
+      window.electronAPI.send('load-participant-messages', { groupId, participantId });
 
       firstLoadOk = true;
 
-      setIsGroupsReady(true);
+      setIsReady(true);
     })
 
     const removeEventListener2 = window.electronAPI.on('participant-messages-loaded', (event, response) => {
-      setParticipantsDict(participantsDict => {
-        const dict = { ...participantsDict }
-        console.log(response);
-
-        Object.keys(dict).forEach(x => {
-          dict[x].messages = [];
-        })
-
-        for (let index = 0; index < response.length; index++) {
-          const message = response[index];
-
-          dict[message.author]?.messages?.push(message);
-        }
-
-        return dict;
-      })
+      console.log(response);
+      setMessages(response);
     })
 
     return () => {
@@ -64,10 +43,25 @@ export function Participants() {
 
   return <Layout>
     <div className='container'>
-      {isGroupsReady
+      {isReady
         ? (
           <div className='home'>
-            <h2>Grupo: {groupInfo.name}</h2>
+            <div className='d-flex justify-content-space-between'>
+              <h2>Participante: {info.name}</h2>
+              <button className='btn btn-secondary' onClick={e => navigate(-1)}>Voltar</button>
+            </div>
+            <br />
+            <ul className="list-group">
+              {messages.map(x => (
+                <li key={x.id._serialized} className="list-group-item d-flex justify-content-between align-items-start">
+                  <div className="ms-2 me-auto">
+                    <div className="fw-bold">{info.name}</div>
+                    {x.body}
+                  </div>
+                  <span className="badge text-bg-secondary rounded-pill">&nbsp;{moment.unix(x.timestamp).format('hh:mm')}&nbsp;</span>
+                </li>
+              ))}
+            </ul>
           </div>
         )
         : (

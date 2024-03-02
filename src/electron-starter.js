@@ -30,6 +30,9 @@ app.on('activate', () => {
 
 const { Client, LocalAuth } = require('whatsapp-web.js');
 
+/**
+ * @type {import('whatsapp-web.js').Client}
+ */
 let client = null;
 
 ipcMain.on('init-login', (event) => {
@@ -51,6 +54,35 @@ ipcMain.on('init-login', (event) => {
   client.on('ready', () => runReady(win, client));
 
   client.initialize();
+});
+
+ipcMain.on('load-chats', async (event, groupId) => {
+  console.log('Load group chats!')
+
+  const webContents = event.sender
+  const win = BrowserWindow.fromWebContents(webContents)
+  const response = await client.getChats()
+  const groups = response.filter(x => x.isGroup).slice(0, 6)
+  const profilesPromises = groups.map(x => client.getProfilePicUrl(x.id._serialized))
+
+  const pictures = await Promise.all(profilesPromises)
+
+  pictures.forEach((x, i) => {
+    groups[i].profilePicture = x
+  })
+
+  for (let index = 0; index < groups.length; index++) {
+    const contact = groups[index]
+    const participants = contact.groupMetadata.participants.slice(0, 5)
+
+    var participantsPictures = await Promise.all(participants.map(x => client.getProfilePicUrl(x.id._serialized)))
+
+    participantsPictures.forEach((x, i) => {
+      participants[i].profilePicture = x
+    })
+  }
+
+  win.webContents.send('chats-loaded', groups);
 });
 
 ipcMain.on('load-group-info', async (event, groupId) => {
@@ -84,39 +116,31 @@ ipcMain.on('load-group-messages', async (event, groupId) => {
   const win = BrowserWindow.fromWebContents(webContents)
   const chat = await client.getChatById(groupId)
   const messages = await chat.fetchMessages({ limit: 50 })
-  
+
   // console.log(messages);
-  
+
   win.webContents.send('group-messages-loaded', messages)
 });
 
-ipcMain.on('load-chats', async (event, groupId) => {
-  console.log('Load group chats!')
-  
+ipcMain.on('load-participant-info', async (event, participantId) => {
+  console.log('Load group messages!')
   const webContents = event.sender
   const win = BrowserWindow.fromWebContents(webContents)
-  const response = await client.getChats()
-  const groups = response.filter(x => x.isGroup).slice(0, 6)
-  const profilesPromises = groups.map(x => client.getProfilePicUrl(x.id._serialized))
+  const contact = await client.getContactById(participantId)
+  // console.log(messages);
 
-  const pictures = await Promise.all(profilesPromises)
+  win.webContents.send('participant-info-loaded', contact)
+});
 
-  pictures.forEach((x, i) => {
-    groups[i].profilePicture = x
-  })
+ipcMain.on('load-participant-messages', async (event, {groupId, participantId}) => {
+  console.log('Load group messages!')
+  const webContents = event.sender
+  const win = BrowserWindow.fromWebContents(webContents)
+  const chat = await client.getChatById(groupId)
+  const messages = await chat.fetchMessages({ limit: 1000 })
+  // console.log(messages);
 
-  for (let index = 0; index < groups.length; index++) {
-    const contact = groups[index]
-    const participants = contact.groupMetadata.participants.slice(0, 5)
-
-    var participantsPictures = await Promise.all(participants.map(x => client.getProfilePicUrl(x.id._serialized)))
-
-    participantsPictures.forEach((x, i) => {
-      participants[i].profilePicture = x
-    })
-  }
-
-  win.webContents.send('chats-loaded', groups);
+  win.webContents.send('participant-messages-loaded', messages.filter(x => x.author === participantId))
 });
 
 async function runReady(win) {
