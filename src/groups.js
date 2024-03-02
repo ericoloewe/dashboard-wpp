@@ -10,6 +10,8 @@ export function Groups() {
   const [participantsDict, setParticipantsDict] = useState({});
 
   useEffect(() => {
+    let firstLoadOk = false;
+
     const removeEventListener1 = window.electronAPI.on('group-info-loaded', (event, response) => {
       console.log(response);
 
@@ -24,6 +26,8 @@ export function Groups() {
       setParticipantsDict({ ...dict });
 
       window.electronAPI.send('load-group-messages', groupId);
+
+      firstLoadOk = true;
 
       setIsGroupsReady(true);
     })
@@ -47,9 +51,16 @@ export function Groups() {
       })
     })
 
+    const interval = setInterval(() => {
+      if (firstLoadOk)
+        window.electronAPI.send('load-group-messages', groupId);
+    }, 5000);
+
+
     return () => {
       removeEventListener1();
       removeEventListener2();
+      clearInterval(interval);
     };
   }, []);
 
