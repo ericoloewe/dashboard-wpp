@@ -104,7 +104,7 @@ function build() {
     }
   };
 
-  rmdirSync(path.join(__dirname, './dist'))
+  rmdirSync(path.join(__dirname, './dist'), { recursive: true, force: true })
 
   builder.build({
     targets: Platform.WINDOWS.createTarget(),
