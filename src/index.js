@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.scss';
 import reportWebVitals from './reportWebVitals';
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 import { Home } from './home';
 import { Groups } from './groups';
 import { Login } from './login';
@@ -13,7 +13,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 if (typeof (window.electronAPI) === 'undefined') {
   document.getElementById('root').innerHTML = "Invalid browser, you have to use electron";
 } else {
-  const router = createBrowserRouter([
+  const router = createHashRouter([
     {
       path: "/home",
       element: <Home />,

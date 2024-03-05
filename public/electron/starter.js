@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 // include the Node.js 'path' module at the top of your file
 const path = require('node:path')
+const isDev = require('./is-dev')
 
 require("@electron/remote/main").initialize()
 
@@ -15,7 +16,12 @@ const createWindow = () => {
     }
   })
 
-  win.loadURL('http://localhost:3000')
+
+  win.loadURL(
+    isDev
+      ? 'http://localhost:3000'
+      : `file://${path.join(__dirname, '../../build/index.html')}`
+  )
 }
 
 app.whenReady().then(createWindow)
@@ -132,7 +138,7 @@ ipcMain.on('load-participant-info', async (event, participantId) => {
   win.webContents.send('participant-info-loaded', contact)
 });
 
-ipcMain.on('load-participant-messages', async (event, {groupId, participantId}) => {
+ipcMain.on('load-participant-messages', async (event, { groupId, participantId }) => {
   console.log('Load group messages!')
   const webContents = event.sender
   const win = BrowserWindow.fromWebContents(webContents)
