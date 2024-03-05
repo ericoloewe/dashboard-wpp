@@ -4,15 +4,20 @@
   "private": true,
   "main": "public/electron/starter.js",
   "homepage": "./",
+  "repository": {
+    "url": "https://github.com/ericoloewe/dashboard-wpp.git"
+  },
   "scripts": {
     "start": "concurrently -k \"npm run react:start\" \"npm run electron:start\"",
     "build": "npm run react:build && npm run electron:build",
+    "deploy": "npm run build && npm run deploy",
     "react:start": "react-scripts start",
     "react:build": "react-scripts build",
     "react:test": "react-scripts test",
     "react:eject": "react-scripts eject",
     "electron:start": "wait-on tcp:3000 && electron .",
-    "electron:build": "node ./electron-builder.config.js"
+    "electron:build": "node ./electron-builder.config.js",
+    "electron:deploy": "node ./electron-builder.config.js --publish"
   },
   "eslintConfig": {
     "extends": [
@@ -35,6 +40,7 @@
   "dependencies": {
     "@electron/remote": "2.1.2",
     "bootstrap": "5.3.3",
+    "dotenv": "16.4.5",
     "moment": "2.30.1",
     "qrcode": "1.5.3",
     "react": "18.2.0",
@@ -48,9 +54,10 @@
     "@testing-library/jest-dom": "5.17.0",
     "@testing-library/react": "13.4.0",
     "@testing-library/user-event": "13.5.0",
+    "concurrently": "8.2.2",
     "electron": "29.1.0",
     "electron-builder": "24.13.3",
-    "concurrently": "8.2.2",
+    "electron-updater": "6.1.8",
     "react-scripts": "5.0.1",
     "wait-on": "7.2.0"
   }
