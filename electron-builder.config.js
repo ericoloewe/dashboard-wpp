@@ -3,10 +3,9 @@ const { GitHubPublisher } = require("electron-publish/out/gitHubPublisher")
 const { CancellationToken } = require("builder-util-runtime/out/CancellationToken")
 const Platform = builder.Platform
 const path = require('path');
-const { readdir } = require('fs');
+const { readdir, rmdirSync } = require('fs');
 
 require('dotenv').config()
-
 
 function run() {
   if (process.argv.includes('--publish')) {
@@ -104,6 +103,8 @@ function build() {
       main: "build/electron/starter.js"
     }
   };
+
+  rmdirSync(path.join(__dirname, './dist'))
 
   builder.build({
     targets: Platform.WINDOWS.createTarget(),
