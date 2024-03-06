@@ -102,7 +102,7 @@ export function Groups() {
 export function Card({ participant, groupId }) {
   return (
     <Link to={`/groups/${groupId}/${participant.id._serialized}`} className="card">
-      <img src={participant.profilePicture} alt={participant?.contact?.name} />
+      <img src={participant.profilePicture || './no-profile.jpg'} alt={participant?.contact?.name} className='card-img' />
       <h4>{participant?.contact?.name}</h4>
       <hr />
       <h6>Quantidade de mensagens: {participant.messages?.length}</h6>

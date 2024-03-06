@@ -55,12 +55,12 @@ export function Home() {
 export function Card({ group }) {
   return (
     <Link to={`/groups/${group.id._serialized}`} className="card">
-      <img src={group.profilePicture} alt={group.name} />
+      <img src={group.profilePicture || './no-profile.jpg'} alt={group.name} />
       <h4>{group.name}</h4>
       <hr />
       <div className='participants'>
         {group.groupMetadata.participants.slice(0, 5).map(x => (
-          <img key={x.id.user} src={x.profilePicture} alt={x.id.user} className='rounded' />
+          <img key={x.id.user} src={x.profilePicture || './no-profile.jpg'} alt={x.id.user} className='card-img' />
         ))}
       </div>
     </Link>
