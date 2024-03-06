@@ -11,6 +11,7 @@
 # production
 /build
 /dist
+/log
 
 /.wwebjs_cache
 /.wwebjs_auth

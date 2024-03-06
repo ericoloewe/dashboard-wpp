@@ -1,6 +1,19 @@
 const { app } = require('electron');
 const { autoUpdater } = require("electron-updater");
 
+Object.defineProperty(app, 'isPackaged', {
+  get() {
+    return true;
+  }
+});
+
+autoUpdater.setFeedURL({
+  provider: 'github',
+  owner: 'ericoloewe',
+  repo: 'dashboard-wpp',
+  private: true,
+});
+
 function sendStatusToWindow(text) {
   console.log(text);
 }

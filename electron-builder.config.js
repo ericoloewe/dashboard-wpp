@@ -38,7 +38,7 @@ function publish() {
 
   readdir(distPath, async (err, files) => {
     const releaseFilesPromises = files
-      .filter(x => x.includes('dashboard-gestao'))
+      .filter(x => x.includes('dashboard-gestao') || x.includes('debug.yml') || x.includes('config.yml') || x.includes('latest.yml'))
       .map(x => path.join(distPath, x))
       .map(x => publishFile(publisher, x));
 
