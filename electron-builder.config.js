@@ -3,9 +3,11 @@ const { GitHubPublisher } = require("electron-publish/out/gitHubPublisher")
 const { CancellationToken } = require("builder-util-runtime/out/CancellationToken")
 const Platform = builder.Platform
 const path = require('path');
-const { readdir, rmdirSync } = require('fs');
+const { readdir, rm, mkdir, copyFile } = require('fs/promises');
 
 require('dotenv').config()
+
+const distPath = path.join(__dirname, './dist');
 
 function run() {
   if (process.argv.includes('--publish')) {
@@ -16,7 +18,7 @@ function run() {
   }
 }
 
-function publish() {
+async function publish() {
   var pjson = require('./package.json');
   console.log(pjson.version);
 
@@ -34,22 +36,24 @@ function publish() {
   const cancellationToken = new CancellationToken();
 
   const publisher = new GitHubPublisher({ cancellationToken: cancellationToken }, info, pjson.version, { publish: 'always' });
-  const distPath = path.join(__dirname, './dist');
 
-  readdir(distPath, async (err, files) => {
+  try {
+    const files = await readdir(distPath);
     const releaseFilesPromises = files
-      .filter(x => x.includes('dashboard-gestao') || x.includes('debug.yml') || x.includes('config.yml') || x.includes('latest.yml'))
+      .filter(x => x.includes('dashboard-gestao') || x.includes('debug.yml') || x.includes('config.yaml') || x.includes('latest.yml'))
       .map(x => path.join(distPath, x))
       .map(x => publishFile(publisher, x));
 
-    Promise.all(releaseFilesPromises)
-      .then(function (result) {
-        console.log(JSON.stringify(result));
-      }).catch(console.error);
-  });
+    const result = await Promise.all(releaseFilesPromises)
+
+    console.log(JSON.stringify(result));
+  } catch (ex) {
+    console.error("build", ex);
+  }
+
 }
 
-function build() {
+async function build() {
   /**
     * @type {import('electron-builder').Configuration}
     * @see https://www.electron.build/configuration/configuration
@@ -57,6 +61,7 @@ function build() {
   const options = {
     extends: null,
     appId: "com.loewe.dashbord",
+    artifactName: "dashboard-gestao-${version}.${ext}",
     // "store" | “normal" | "maximum". - For testing builds, use 'store' to reduce build time significantly.
     compression: "store",
     removePackageScripts: true,
@@ -79,6 +84,7 @@ function build() {
     files: [
       "build/**/*",
       "package.json",
+      ".env",
       "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
       "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
       "!**/node_modules/*.d.ts",
@@ -98,20 +104,27 @@ function build() {
       // "node_modules/ms/**/*",
       // "node_modules/@electron/**/*",
     ],
+    extraFiles: [".env"],
     includeSubNodeModules: false,
     extraMetadata: {
       main: "build/electron/starter.js"
     }
   };
 
-  rmdirSync(path.join(__dirname, './dist'), { recursive: true, force: true })
+  try {
+    await rm(distPath, { recursive: true, force: true })
+    await mkdir(path.join(distPath, './win-unpacked'), { recursive: true })
+    await copyFile(path.join(__dirname, './.env'), path.join(distPath, './win-unpacked/.env'))
 
-  builder.build({
-    targets: Platform.WINDOWS.createTarget(),
-    config: options
-  }).then(function (result) {
+    const result = await builder.build({
+      targets: Platform.WINDOWS.createTarget(),
+      config: options
+    })
+
     console.log(JSON.stringify(result));
-  }).catch(console.error);
+  } catch (ex) {
+    console.error("build", ex);
+  }
 }
 
 /**
