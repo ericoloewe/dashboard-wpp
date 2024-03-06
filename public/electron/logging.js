@@ -1,7 +1,11 @@
 function createLogging() {
   const winston = require('winston');
+  const { tmpdir } = require('os');
+  const path = require('path');
 
-  const { combine, timestamp, printf, colorize, align, simple } = winston.format;
+  const { combine, timestamp, printf, colorize, align } = winston.format;
+
+  const loggingPath = path.join(tmpdir(), './dashboard-gestao/')
 
   const logger = winston.createLogger({
     level: process.env.LOG_LEVEL || 'info',
@@ -14,8 +18,8 @@ function createLogging() {
       // - Write all logs with importance level of `error` or less to `error.log`
       // - Write all logs with importance level of `info` or less to `combined.log`
       //
-      new winston.transports.File({ filename: 'log/error.log', level: 'error' }),
-      new winston.transports.File({ filename: 'log/combined.log' }),
+      new winston.transports.File({ filename: path.join(loggingPath, './error.log'), level: 'error' }),
+      new winston.transports.File({ filename: path.join(loggingPath, './combined.log') }),
     ],
   });
 

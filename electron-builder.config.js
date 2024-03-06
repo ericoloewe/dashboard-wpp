@@ -1,3 +1,5 @@
+require('./public/electron/logging')
+
 const builder = require("electron-builder")
 const { GitHubPublisher } = require("electron-publish/out/gitHubPublisher")
 const { CancellationToken } = require("builder-util-runtime/out/CancellationToken")
@@ -9,12 +11,17 @@ require('dotenv').config()
 
 const distPath = path.join(__dirname, './dist');
 
-function run() {
+async function run() {
+  console.log("start run");
   if (process.argv.includes('--publish')) {
-    publish();
+    console.log("start publish");
+    await publish();
+    console.log("end publish");
   } else {
+    console.log("start build");
     // Promise is returned
-    build();
+    await build();
+    console.log("end build");
   }
 }
 
@@ -143,4 +150,4 @@ function publishFile(publisher, filePath) {
   return publisher.upload(task)
 }
 
-run();
+run().catch(console.error).finally(x => console.log("end run"))
