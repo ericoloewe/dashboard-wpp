@@ -70,7 +70,7 @@ export function Groups() {
   }, [groupId]);
 
   return <Layout>
-    <div className='container'>
+    <div className='container' style={{ paddingBottom: 30 }}>
       {isGroupsReady
         ? (
           <div className='home'>

@@ -26,7 +26,7 @@ export function Home() {
   }, []);
 
   return <Layout>
-    <div className='container'>
+    <div className='container' style={{ paddingBottom: 30 }}>
       {isGroupsReady
         ? (
           <div className='home'>
@@ -50,7 +50,7 @@ export function Home() {
     </div>
   </Layout>
 }
- 
+
 
 export function Card({ group }) {
   return (
