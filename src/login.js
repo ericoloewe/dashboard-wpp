@@ -32,7 +32,7 @@ export function Login() {
   }
 
   return <header className="App-header">
-    <img src={qrcode || logo} className={`App-logo ${qrcode && 'qrcode-ok'}`} alt="logo" />
+    <img src={qrcode || './logo-original.jpeg'} className={`App-logo qrcode-ok`} alt="logo" />
 
     {!qrcode && (
       <button type='button' className='btn btn-primary' onClick={onClick} disabled={isLoading}>

@@ -8,6 +8,74 @@
 @import "../node_modules/bootstrap/scss/variables-dark";
 
 // 4. Include any default map overrides here
+// required to get $orange variable
+$primary: #0f2034; // set the $primary variable
+
+/**
+ * 
+$white: #ffffff;
+
+$theme-colors: (
+    "light":      #d7e5f4,
+    "dark":       #0e1f33,
+    "primary":    #114481,
+    "secondary":  #13a154,
+    "info":       #5e7e47,
+    "success":    #09a15b,
+    "warning":    #e2ca09,
+    "danger":     #f11403,
+);
+
+ $white: #ffffff;
+
+$theme-colors: (
+    "light":      #d7e5f4,
+    "dark":       #0e1f33,
+    "primary":    #104485,
+    "secondary":  #ac5a2f,
+    "info":       #fd6f48,
+    "success":    #09a35d,
+    "warning":    #e2ca0a,
+    "danger":     #f21503,
+);
+
+
+ (
+    "light":      #d7e5f4,
+    "dark":       #0f2034,
+    "primary":    #0f466e,
+    "secondary":  #3b685e,
+    "info":       #156769,
+    "success":    #119754,
+    "warning":    #e0c713,
+    "danger":     #ee0a07,
+)
+
+$white: #ffffff;
+
+$theme-colors: (
+    "light":      #d7e5f4,
+    "dark":       #0f2034,
+    "primary":    #1a4261,
+    "secondary":  #bd5b3a,
+    "info":       #747b48,
+    "success":    #219a58,
+    "warning":    #e1c823,
+    "danger":     #ef1112,
+);
+ */
+
+// merge with existing $theme-colors map
+$theme-colors: map-merge($theme-colors, (
+  "light":      #d0d6d6,
+  "dark":       #0f2034,
+  "primary":    #2e629e,
+  "secondary":  #01b4ac,
+  "info":       #8cd3ae,
+  "success":    #00be6a,
+  "warning":    #ebd100,
+  "danger":     #ff1103,
+));
 
 // 5. Include remainder of required parts
 @import "../node_modules/bootstrap/scss/maps";

@@ -1,5 +1,6 @@
 @import "_bootstrap";
 
+
 @import "../node_modules/bootstrap/scss/pagination";
 @import "../node_modules/bootstrap/scss/forms/form-select";
 @import "../node_modules/bootstrap/scss/forms/form-control";
@@ -16,6 +17,8 @@
 body,
 #root {
   min-height: 100vh;
+  background: #0f2034;
+  color: #fff;
 }
 
 #root .container,
