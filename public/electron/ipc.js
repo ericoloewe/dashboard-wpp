@@ -119,10 +119,14 @@ ipcMain.on('load-media', async (event, messageId) => {
   const win = BrowserWindow.fromWebContents(webContents);
   const message = await client.getMessageById(messageId);
   const media = await message.downloadMedia();
-  
+
   // console.log(messages);
   win.webContents.send('media-loaded', media);
   console.log('end load media!');
+});
+
+ipcMain.on('logging', async (event, { type, args }) => {
+  console[type](...args);
 });
 
 async function runReady(win) {

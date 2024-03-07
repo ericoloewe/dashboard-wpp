@@ -2,13 +2,16 @@ import React from "react"
 
 import { AuthProvider } from "./auth"
 import { EnvProvider } from "./env"
+import { LoggingProvider } from "./logging"
 
 export function AppProviders({ children }) {
   return (
-    <EnvProvider>
-      <AuthProvider>
-        {children}
-      </AuthProvider>
-    </EnvProvider>
+    <LoggingProvider>
+      <EnvProvider>
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </EnvProvider>
+    </LoggingProvider>
   )
 }

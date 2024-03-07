@@ -14,7 +14,7 @@ export function Groups() {
     let firstLoadOk = false;
 
     const removeEventListener1 = window.electronAPI.on('group-info-loaded', (event, response) => {
-      console.log(response);
+      console.debug(response);
 
       setGroupInfo(response);
 
@@ -36,7 +36,7 @@ export function Groups() {
     const removeEventListener2 = window.electronAPI.on('group-messages-loaded', (event, response) => {
       setParticipantsDict(participantsDict => {
         const dict = { ...participantsDict }
-        console.log(response);
+        console.debug(response);
 
         Object.keys(dict).forEach(x => {
           dict[x].messages = [];

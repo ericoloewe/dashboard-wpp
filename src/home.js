@@ -12,7 +12,7 @@ export function Home() {
     const removeEventListener1 = window.electronAPI.on('chats-loaded', (event, response) => {
       const groups = response;
 
-      console.log(response);
+      console.debug(response);
 
       setGroups(groups);
       setIsGroupsReady(true);

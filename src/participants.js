@@ -18,7 +18,7 @@ export function Participants() {
     let firstLoadOk = false;
 
     const removeEventListener1 = window.electronAPI.on('participant-info-loaded', (event, response) => {
-      console.log(response);
+      console.debug(response);
       setInfo(response);
 
       window.electronAPI.send('load-participant-messages', { groupId, participantId });
@@ -29,12 +29,12 @@ export function Participants() {
     })
 
     const removeEventListener2 = window.electronAPI.on('participant-messages-loaded', (event, response) => {
-      console.log(response);
+      console.debug(response);
       setMessages(response);
     })
 
     const removeEventListener3 = window.electronAPI.on('media-loaded', (event, response) => {
-      console.log(response);
+      console.debug(response);
       setMedia(response);
       setIsLoading(false);
     })
