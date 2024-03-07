@@ -8,12 +8,11 @@ export function Participants() {
   const { groupId, participantId } = useParams();
   const [isReady, setIsReady] = useState(false);
   const [isMediaLoading, setIsMediaLoading] = useState(false);
-  const [isMessagesLoading, setIsMessagesLoading] = useState(false);
+  const [isMessagesLoading, setIsMessagesLoading] = useState(true);
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
   const [info, setInfo] = useState({});
   const [messages, setMessages] = useState([]);
   const [media, setMedia] = useState();
-  const navigate = useNavigate();
 
   useEffect(() => {
     let firstLoadOk = false;
