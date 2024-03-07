@@ -33,10 +33,13 @@ ipcMain.on('load-chats', async (event, groupId) => {
   const webContents = event.sender;
   const win = BrowserWindow.fromWebContents(webContents);
   const response = await client.getChats();
+  console.log('end getChats!');
   const groups = response.filter(x => x.isGroup).slice(0, 6);
   const profilesPromises = groups.map(x => client.getProfilePicUrl(x.id._serialized));
 
   const pictures = await Promise.all(profilesPromises);
+
+  console.log('end getProfilePicUrl!');
 
   pictures.forEach((x, i) => {
     groups[i].profilePicture = x;
@@ -52,6 +55,8 @@ ipcMain.on('load-chats', async (event, groupId) => {
       participants[i].profilePicture = x;
     });
   }
+
+  console.log('end getProfilePicUrl!');
 
   win.webContents.send('chats-loaded', groups);
 });

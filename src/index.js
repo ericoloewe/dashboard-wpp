@@ -7,13 +7,14 @@ import { Home } from './home';
 import { Groups } from './groups';
 import { Login } from './login';
 import { Participants } from './participants';
+import { AppProviders } from './contexts';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 if (typeof (window.electronAPI) === 'undefined') {
   document.getElementById('root').innerHTML = "Invalid browser, you have to use electron";
 } else {
-  const router = createHashRouter([
+  const routes = [
     {
       path: "/home",
       element: <Home />,
@@ -30,11 +31,17 @@ if (typeof (window.electronAPI) === 'undefined') {
       path: "/",
       element: <Login />,
     },
-  ]);
+  ];
+
+  for (let index = 0; index < routes.length; index++) {
+    const route = routes[index];
+
+    route.element = <AppProviders>{route.element}</AppProviders>;
+  }
 
   root.render(
     <React.StrictMode>
-      <RouterProvider router={router} />
+      <RouterProvider router={createHashRouter(routes)} />
     </React.StrictMode>
   );
 }

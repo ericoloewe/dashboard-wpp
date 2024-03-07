@@ -29,7 +29,8 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  gap: 10px;
+  gap: 20px;
+  min-height: 100vh;
 }
 
 .App-link {
