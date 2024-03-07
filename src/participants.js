@@ -91,7 +91,6 @@ export function Participants() {
           <div className='home d-flex flex-column gap-3'>
             <div className='d-flex justify-content-between'>
               <h2>Participante: {info.name}</h2>
-              <button className='btn btn-secondary' onClick={e => navigate(-1)}>Voltar</button>
             </div>
             <br />
             {isMessagesLoading ? <Loader /> : <Messages messages={messages} info={info} onMediaClick={onMediaClick} />}
@@ -105,7 +104,6 @@ export function Participants() {
                 )
               }
             </Modal>}
-            <button className='btn btn-secondary' onClick={e => navigate(-1)}>Voltar</button>
           </div>
         )
         : (
