@@ -1,6 +1,7 @@
 import { Link, useHref } from 'react-router-dom';
 import './layout.scss';
 import { useState } from 'react';
+import { useEnv } from './contexts/env';
 
 
 export function Layout({ children }) {
@@ -15,6 +16,7 @@ export function Layout({ children }) {
 function Header() {
   const href = useHref();
   const [show, setShow] = useState(false);
+  const { isDev } = useEnv();
 
   return <header className="navbar navbar-expand-sm bg-light">
     <div className="container-fluid">
@@ -33,9 +35,11 @@ function Header() {
           <li className="nav-item">
             <Link className={`nav-link ${href === '/home' ? 'active' : ''}`} to={'/home'}>Inicio</Link>
           </li>
-          <li className="nav-item">
-            <Link className={`nav-link ${href === '/' ? 'active' : ''}`} to={'/'}>Login</Link>
-          </li>
+          {isDev &&
+            (<li className="nav-item">
+              <Link className={`nav-link ${href === '/' ? 'active' : ''}`} to={'/'}>Login</Link>
+            </li>)
+          }
         </ul>
       </div>
     </div>

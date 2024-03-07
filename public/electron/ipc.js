@@ -113,6 +113,18 @@ ipcMain.on('load-participant-messages', async (event, { groupId, participantId }
   win.webContents.send('participant-messages-loaded', messages.filter(x => x.author === participantId));
 });
 
+ipcMain.on('load-media', async (event, messageId) => {
+  console.log('start load media!');
+  const webContents = event.sender;
+  const win = BrowserWindow.fromWebContents(webContents);
+  const message = await client.getMessageById(messageId);
+  const media = await message.downloadMedia();
+  
+  // console.log(messages);
+  win.webContents.send('media-loaded', media);
+  console.log('end load media!');
+});
+
 async function runReady(win) {
   console.log('Client is ready!');
   win.webContents.send('whats-ready', 'ok');
