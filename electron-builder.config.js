@@ -82,6 +82,7 @@ async function build() {
       repo: 'dashboard-wpp',
       private: true,
     },
+    icon: path.join(__dirname, './build/logo.png'),
     nsis: { deleteAppDataOnUninstall: true, oneClick: false },
     mac: null,
     target: [

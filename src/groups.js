@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Layout } from './layout';
 import { Link, useParams } from "react-router-dom";
 import { Loader } from './loader';
+import moment from 'moment';
 
 export function Groups() {
   const { groupId } = useParams();
@@ -9,6 +10,7 @@ export function Groups() {
   const [search, setSearch] = useState('');
   const [groupInfo, setGroupInfo] = useState({});
   const [participantsDict, setParticipantsDict] = useState({});
+  const [lastUpdate, setLastUpdate] = useState(new Date());
 
   useEffect(() => {
     let firstLoadOk = false;
@@ -69,6 +71,10 @@ export function Groups() {
     window.electronAPI.send('load-group-info', groupId);
   }, [groupId]);
 
+  useEffect(() => {
+    setLastUpdate(new Date());
+  }, [participantsDict]);
+
   return <Layout>
     <div className='container' style={{ paddingBottom: 30 }}>
       {isGroupsReady
@@ -80,6 +86,7 @@ export function Groups() {
                 <label htmlFor="buscaParticipante" className="form-label">Buscar participante:</label>
                 <input type="search" id="buscaParticipante" name="buscaParticipante" className="form-control" placeholder="Nome do participante" value={search} onChange={e => setSearch(e.target.value)} />
               </div>
+              <span className="badge text-bg-primary rounded-pill">&nbsp;Ultima atualização em: {moment(lastUpdate).format('DD/MM/YYYY hh:mm:ss')}&nbsp;</span>
             </div>
             <div className='cards'>
               {Object.values(participantsDict)
