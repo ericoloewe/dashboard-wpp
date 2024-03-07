@@ -1,6 +1,7 @@
 const { BrowserWindow, ipcMain } = require('electron');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const { performance } = require('perf_hooks');
+const { createWindow } = require('./window');
 
 /**
  * @type {import('whatsapp-web.js').Client}
@@ -56,7 +57,7 @@ customIpcMain.on('load-chats', async (event, groupId) => {
   const profilesPromises = groups.map(x => client.getProfilePicUrl(x.id._serialized));
 
   const pictures = await Promise.all(profilesPromises);
-  
+
   pictures.forEach((x, i) => {
     groups[i].profilePicture = x;
   });
@@ -126,6 +127,10 @@ customIpcMain.on('load-media', async (event, messageId) => {
 
 customIpcMain.on('logging', async (event, { type, args }) => {
   console[type](...args);
+});
+
+customIpcMain.on('new-window', async (event, { hash }) => {
+  createWindow(hash);
 });
 
 async function runReady(win) {

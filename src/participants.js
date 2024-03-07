@@ -7,7 +7,8 @@ import moment from 'moment';
 export function Participants() {
   const { groupId, participantId } = useParams();
   const [isReady, setIsReady] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isMediaLoading, setIsMediaLoading] = useState(false);
+  const [isMessagesLoading, setIsMessagesLoading] = useState(false);
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
   const [info, setInfo] = useState({});
   const [messages, setMessages] = useState([]);
@@ -31,12 +32,13 @@ export function Participants() {
     const removeEventListener2 = window.electronAPI.on('participant-messages-loaded', (event, response) => {
       console.debug(response);
       setMessages(response);
+      setIsMessagesLoading(false);
     })
 
     const removeEventListener3 = window.electronAPI.on('media-loaded', (event, response) => {
       console.debug(response);
       setMedia(response);
-      setIsLoading(false);
+      setIsMediaLoading(false);
     })
 
     return () => {
@@ -57,7 +59,7 @@ export function Participants() {
 
   function onMediaClick(messageId) {
     window.electronAPI.send('load-media', messageId);
-    setIsLoading(true);
+    setIsMediaLoading(true);
     setIsMediaModalOpen(true);
   }
 
@@ -91,24 +93,9 @@ export function Participants() {
               <button className='btn btn-secondary' onClick={e => navigate(-1)}>Voltar</button>
             </div>
             <br />
-            <ul className="list-group">
-              {messages.map(x => (
-                <li key={x.id._serialized} className="list-group-item d-flex justify-content-between align-items-start">
-                  <div className="ms-2 me-auto" style={{ maxWidth: '85%' }}>
-                    <div className="fw-bold">{info.name}</div>
-                    {x.body}
-                  </div>
-                  <div className='d-flex flex-column align-items-end gap-2'>
-                    <span className="badge text-bg-light rounded-pill">&nbsp;{moment.unix(x.timestamp).format('DD/MM/YY HH:mm')}&nbsp;</span>
-                    {x.hasMedia && (
-                      <button type='button' className='btn btn-secondary align-self-end' onClick={e => onMediaClick(x.id._serialized)}>Ver mídia</button>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
+            {isMessagesLoading ? <Loader /> : <Messages messages={messages} info={info} onMediaClick={onMediaClick} />}
             {(isMediaModalOpen) && <Modal title="Mídia" onClose={onCloseModal}>
-              {isLoading
+              {isMediaLoading
                 ? <Loader />
                 : (
                   <div className='d-flex justify-content-center align-items-center'>
@@ -129,6 +116,25 @@ export function Participants() {
 }
 
 
+
+function Messages({ messages, info, onMediaClick }) {
+  return <ul className="list-group">
+    {messages.map(x => (
+      <li key={x.id._serialized} className="list-group-item d-flex justify-content-between align-items-start">
+        <div className="ms-2 me-auto" style={{ maxWidth: '85%' }}>
+          <div className="fw-bold">{info.name}</div>
+          {x.body}
+        </div>
+        <div className='d-flex flex-column align-items-end gap-2'>
+          <span className="badge text-bg-light rounded-pill">&nbsp;{moment.unix(x.timestamp).format('DD/MM/YY HH:mm')}&nbsp;</span>
+          {x.hasMedia && (
+            <button type='button' className='btn btn-secondary align-self-end' onClick={e => onMediaClick(x.id._serialized)}>Ver mídia</button>
+          )}
+        </div>
+      </li>
+    ))}
+  </ul>;
+}
 
 function Modal({ children, title, onClose }) {
   const [isOpen, setIsOpen] = useState(true);
