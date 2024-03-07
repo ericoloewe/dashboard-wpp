@@ -99,7 +99,7 @@ export function Participants() {
                     {x.body}
                   </div>
                   <div className='d-flex flex-column align-items-end gap-2'>
-                    <span className="badge text-bg-light rounded-pill">&nbsp;{moment.unix(x.timestamp).format('DD/MM/YY hh:mm')}&nbsp;</span>
+                    <span className="badge text-bg-light rounded-pill">&nbsp;{moment.unix(x.timestamp).format('DD/MM/YY HH:mm')}&nbsp;</span>
                     {x.hasMedia && (
                       <button type='button' className='btn btn-secondary align-self-end' onClick={e => onMediaClick(x.id._serialized)}>Ver mídia</button>
                     )}

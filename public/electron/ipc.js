@@ -52,27 +52,14 @@ customIpcMain.on('load-chats', async (event, groupId) => {
   const win = BrowserWindow.fromWebContents(webContents);
   const response = await client.getChats();
   console.info('end getChats!');
-  const groups = response.filter(x => x.isGroup).slice(0, 6);
+  const groups = response.filter(x => x.isGroup).slice(0, 9);
   const profilesPromises = groups.map(x => client.getProfilePicUrl(x.id._serialized));
 
   const pictures = await Promise.all(profilesPromises);
-
-  console.info('end getProfilePicUrl!');
-
+  
   pictures.forEach((x, i) => {
     groups[i].profilePicture = x;
   });
-
-  for (let index = 0; index < groups.length; index++) {
-    const contact = groups[index];
-    const participants = contact.groupMetadata.participants.slice(0, 5);
-
-    var participantsPictures = await Promise.all(participants.map(x => client.getProfilePicUrl(x.id._serialized)));
-
-    participantsPictures.forEach((x, i) => {
-      participants[i].profilePicture = x;
-    });
-  }
 
   console.info('end getProfilePicUrl!');
 

@@ -86,12 +86,11 @@ export function Groups() {
                 <label htmlFor="buscaParticipante" className="form-label">Buscar participante:</label>
                 <input type="search" id="buscaParticipante" name="buscaParticipante" className="form-control" placeholder="Nome do participante" value={search} onChange={e => setSearch(e.target.value)} />
               </div>
-              <span className="badge text-bg-primary rounded-pill">&nbsp;Ultima atualização em: {moment(lastUpdate).format('DD/MM/YYYY hh:mm:ss')}&nbsp;</span>
+              <span className="badge text-bg-primary rounded-pill">&nbsp;Ultima atualização em: {moment(lastUpdate).format('DD/MM/YYYY HH:mm:ss')}&nbsp;</span>
             </div>
             <div className='cards'>
               {Object.values(participantsDict)
                 .filter(x => search.length === 0 || x?.contact?.name?.toLowerCase()?.includes(search))
-                .sort((a, b) => (a.messages?.length > b.messages?.length ? -1 : 1))
                 .map(x => (
                   <Card key={x?.id?._serialized} participant={x} groupId={groupId} />
                 ))}

@@ -58,11 +58,6 @@ export function Card({ group }) {
       <img src={group.profilePicture || './no-profile.jpg'} alt={group.name} />
       <h4>{group.name}</h4>
       <hr />
-      <div className='participants'>
-        {group.groupMetadata.participants.slice(0, 5).map(x => (
-          <img key={x.id.user} src={x.profilePicture || './no-profile.jpg'} alt={x.id.user} className='card-img' />
-        ))}
-      </div>
     </Link>
   );
 }
