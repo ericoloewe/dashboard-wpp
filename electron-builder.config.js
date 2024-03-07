@@ -83,7 +83,7 @@ async function build() {
       private: true,
     },
     icon: path.join(__dirname, './build/logo.png'),
-    nsis: { deleteAppDataOnUninstall: true, oneClick: false },
+    nsis: { oneClick: false },
     mac: null,
     target: [
       { target: 'win' },
