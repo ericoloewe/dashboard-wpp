@@ -62,7 +62,7 @@ export function Participants() {
   }
 
   function getMediaElement() {
-    let element = <div>Midia invalida</div>;
+    let element = <div>Mídia invalida</div>;
     const base64 = `data:${media?.mimetype};base64,${media?.data}`;
 
     if (media?.mimetype?.includes('image')) {
@@ -94,15 +94,15 @@ export function Participants() {
                     {x.body}
                   </div>
                   <div className='d-flex flex-column align-items-end gap-2'>
-                    <span className="badge text-bg-info rounded-pill">&nbsp;{moment.unix(x.timestamp).format('hh:mm')}&nbsp;</span>
+                    <span className="badge text-bg-light rounded-pill">&nbsp;{moment.unix(x.timestamp).format('hh:mm')}&nbsp;</span>
                     {x.hasMedia && (
-                      <button type='button' className='btn btn-secondary align-self-end' onClick={e => onMediaClick(x.id._serialized)}>Ver midia</button>
+                      <button type='button' className='btn btn-secondary align-self-end' onClick={e => onMediaClick(x.id._serialized)}>Ver mídia</button>
                     )}
                   </div>
                 </li>
               ))}
             </ul>
-            {(isMediaModalOpen) && <Modal title="Midia" onClose={onCloseModal}>
+            {(isMediaModalOpen) && <Modal title="Mídia" onClose={onCloseModal}>
               {isLoading
                 ? <Loader />
                 : (
@@ -132,9 +132,18 @@ function Modal({ children, title, onClose }) {
     onClose();
   }
 
+  function onCloseClickBackdrop(event) {
+    console.log(event);
+
+    if (event.target.id === 'modal') {
+      onCloseClick();
+    }
+  }
+
+
   return (
     <>
-      <div className={`modal modal-lg fade ${isOpen && 'show'}`} id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{ zIndex: 99, display: isOpen && 'block' }} onClick={onCloseClick}>
+      <div className={`modal modal-lg fade ${isOpen && 'show'}`} id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{ zIndex: 99, display: isOpen && 'block' }} onClick={onCloseClickBackdrop}>
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
@@ -150,7 +159,7 @@ function Modal({ children, title, onClose }) {
           </div>
         </div>
       </div>
-      <div class={`modal-backdrop fade ${isOpen && 'show'}`} style={{ zIndex: 98 }} onClick={onCloseClick}></div>
+      <div class={`modal-backdrop fade ${isOpen && 'show'}`} style={{ zIndex: 98 }} onClick={onCloseClickBackdrop}></div>
     </>
   )
 }
