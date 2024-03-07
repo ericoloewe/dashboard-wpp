@@ -1,14 +1,35 @@
 const { BrowserWindow, ipcMain } = require('electron');
 const { Client, LocalAuth } = require('whatsapp-web.js');
+const { performance } = require('perf_hooks');
 
 /**
  * @type {import('whatsapp-web.js').Client}
  */
 let client = null;
 
-ipcMain.on('init-login', (event) => {
-  console.log("init login");
+const customIpcMain = {
+  on: (channel, subscription) => {
+    ipcMain.on(channel, async (...args) => {
+      if (channel !== 'logging') {
+        console.log(`receive and start ${channel}`);
+        var startTime = performance.now();
+      }
 
+      await subscription(...args);
+
+      if (channel !== 'logging') {
+        var endTime = performance.now();
+        console.log(`end ${channel} in ${endTime - startTime} milliseconds`);
+      }
+    })
+
+    return () => {
+      ipcRenderer.removeListener(channel, subscription);
+    };
+  }
+}
+
+customIpcMain.on('init-login', (event) => {
   const webContents = event.sender;
   const win = BrowserWindow.fromWebContents(webContents);
 
@@ -18,7 +39,6 @@ ipcMain.on('init-login', (event) => {
   client = new Client({ authStrategy: new LocalAuth() });
 
   client.on('qr', (qr) => {
-    console.log('QR RECEIVED', qr);
     win.webContents.send('qrcode-loaded', qr);
   });
 
@@ -27,19 +47,17 @@ ipcMain.on('init-login', (event) => {
   client.initialize();
 });
 
-ipcMain.on('load-chats', async (event, groupId) => {
-  console.log('Load group chats!');
-
+customIpcMain.on('load-chats', async (event, groupId) => {
   const webContents = event.sender;
   const win = BrowserWindow.fromWebContents(webContents);
   const response = await client.getChats();
-  console.log('end getChats!');
+  console.info('end getChats!');
   const groups = response.filter(x => x.isGroup).slice(0, 6);
   const profilesPromises = groups.map(x => client.getProfilePicUrl(x.id._serialized));
 
   const pictures = await Promise.all(profilesPromises);
 
-  console.log('end getProfilePicUrl!');
+  console.info('end getProfilePicUrl!');
 
   pictures.forEach((x, i) => {
     groups[i].profilePicture = x;
@@ -56,13 +74,12 @@ ipcMain.on('load-chats', async (event, groupId) => {
     });
   }
 
-  console.log('end getProfilePicUrl!');
+  console.info('end getProfilePicUrl!');
 
   win.webContents.send('chats-loaded', groups);
 });
 
-ipcMain.on('load-group-info', async (event, groupId) => {
-  console.log('Load group info!');
+customIpcMain.on('load-group-info', async (event, groupId) => {
   const webContents = event.sender;
   const win = BrowserWindow.fromWebContents(webContents);
 
@@ -85,8 +102,7 @@ ipcMain.on('load-group-info', async (event, groupId) => {
 
   win.webContents.send('group-info-loaded', chat);
 });
-ipcMain.on('load-group-messages', async (event, groupId) => {
-  console.log('Load group messages!');
+customIpcMain.on('load-group-messages', async (event, groupId) => {
   const webContents = event.sender;
   const win = BrowserWindow.fromWebContents(webContents);
   const chat = await client.getChatById(groupId);
@@ -95,16 +111,14 @@ ipcMain.on('load-group-messages', async (event, groupId) => {
   // console.log(messages);
   win.webContents.send('group-messages-loaded', messages);
 });
-ipcMain.on('load-participant-info', async (event, participantId) => {
-  console.log('Load group messages!');
+customIpcMain.on('load-participant-info', async (event, participantId) => {
   const webContents = event.sender;
   const win = BrowserWindow.fromWebContents(webContents);
   const contact = await client.getContactById(participantId);
   // console.log(messages);
   win.webContents.send('participant-info-loaded', contact);
 });
-ipcMain.on('load-participant-messages', async (event, { groupId, participantId }) => {
-  console.log('Load group messages!');
+customIpcMain.on('load-participant-messages', async (event, { groupId, participantId }) => {
   const webContents = event.sender;
   const win = BrowserWindow.fromWebContents(webContents);
   const chat = await client.getChatById(groupId);
@@ -113,8 +127,7 @@ ipcMain.on('load-participant-messages', async (event, { groupId, participantId }
   win.webContents.send('participant-messages-loaded', messages.filter(x => x.author === participantId));
 });
 
-ipcMain.on('load-media', async (event, messageId) => {
-  console.log('start load media!');
+customIpcMain.on('load-media', async (event, messageId) => {
   const webContents = event.sender;
   const win = BrowserWindow.fromWebContents(webContents);
   const message = await client.getMessageById(messageId);
@@ -122,10 +135,9 @@ ipcMain.on('load-media', async (event, messageId) => {
 
   // console.log(messages);
   win.webContents.send('media-loaded', media);
-  console.log('end load media!');
 });
 
-ipcMain.on('logging', async (event, { type, args }) => {
+customIpcMain.on('logging', async (event, { type, args }) => {
   console[type](...args);
 });
 

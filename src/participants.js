@@ -85,7 +85,7 @@ export function Participants() {
     <div className='container'>
       {isReady
         ? (
-          <div className='home' style={{ paddingBottom: 40 }}>
+          <div className='home d-flex flex-column gap-3' style={{ paddingBottom: 40 }}>
             <div className='d-flex justify-content-between'>
               <h2>Participante: {info.name}</h2>
               <button className='btn btn-secondary' onClick={e => navigate(-1)}>Voltar</button>
@@ -117,6 +117,7 @@ export function Participants() {
                 )
               }
             </Modal>}
+            <button className='btn btn-secondary' onClick={e => navigate(-1)}>Voltar</button>
           </div>
         )
         : (
@@ -138,9 +139,7 @@ function Modal({ children, title, onClose }) {
   }
 
   function onCloseClickBackdrop(event) {
-    console.log(event);
-
-    if (event.target.id === 'modal') {
+    if (event?.target?.id === 'modal') {
       onCloseClick();
     }
   }
@@ -148,7 +147,7 @@ function Modal({ children, title, onClose }) {
 
   return (
     <>
-      <div className={`modal modal-lg fade ${isOpen && 'show'}`} id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{ zIndex: 99, display: isOpen && 'block' }} onClick={onCloseClickBackdrop}>
+      <div className={`modal modal-lg fade ${isOpen && 'show'}`} id="modal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{ zIndex: 99, display: isOpen && 'block' }} onClick={onCloseClickBackdrop}>
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
@@ -164,7 +163,7 @@ function Modal({ children, title, onClose }) {
           </div>
         </div>
       </div>
-      <div class={`modal-backdrop fade ${isOpen && 'show'}`} style={{ zIndex: 98 }} onClick={onCloseClickBackdrop}></div>
+      <div className={`modal-backdrop fade ${isOpen && 'show'}`} style={{ zIndex: 98 }} onClick={onCloseClickBackdrop}></div>
     </>
   )
 }

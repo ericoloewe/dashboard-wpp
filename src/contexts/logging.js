@@ -19,7 +19,7 @@ export function LoggingProvider(props) {
   const [logger, setLogger] = useState(false);
 
   useEffect(() => {
-    const newLogger = { ...console };
+    const newLogger = { ...consoleBkp };
 
     newLogger.log = createLogging('log');
     newLogger.info = createLogging('info');
@@ -31,11 +31,11 @@ export function LoggingProvider(props) {
   }, []);
 
   useEffect(() => {
-    console.log = logger.log;
-    console.info = logger.info;
-    console.debug = logger.debug;
-    console.error = logger.error;
-    console.warn = logger.warn;
+    window.console.log = logger.log;
+    window.console.info = logger.info;
+    window.console.debug = logger.debug;
+    window.console.error = logger.error;
+    window.console.warn = logger.warn;
   }, [logger]);
 
   return (
