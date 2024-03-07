@@ -50,6 +50,11 @@ export function Participants() {
     window.electronAPI.send('load-participant-info', participantId);
   }, [participantId]);
 
+  useEffect(() => {
+    if (isReady && messages.length > 0)
+      window.scrollTo(0, document.body.scrollHeight);
+  }, [isReady, messages]);
+
   function onMediaClick(messageId) {
     window.electronAPI.send('load-media', messageId);
     setIsLoading(true);
@@ -80,7 +85,7 @@ export function Participants() {
     <div className='container'>
       {isReady
         ? (
-          <div className='home'>
+          <div className='home' style={{ paddingBottom: 40 }}>
             <div className='d-flex justify-content-between'>
               <h2>Participante: {info.name}</h2>
               <button className='btn btn-secondary' onClick={e => navigate(-1)}>Voltar</button>
