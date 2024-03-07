@@ -33,7 +33,7 @@ function Header() {
       <div className={`collapse navbar-collapse ${show && 'show'}`} id="navbarSupportedContent">
         <ul className="navbar-nav">
           <li className="nav-item">
-            <Link className={`nav-link ${href === '/home' ? 'active' : ''}`} to={'/home'}>Inicio</Link>
+            <Link className={`nav-link ${href === '/home' ? 'active' : ''}`} to={'/home'}>Grupos</Link>
           </li>
           {isDev &&
             (<li className="nav-item">

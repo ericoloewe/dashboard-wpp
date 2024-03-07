@@ -94,12 +94,12 @@ export function Participants() {
             <ul className="list-group">
               {messages.map(x => (
                 <li key={x.id._serialized} className="list-group-item d-flex justify-content-between align-items-start">
-                  <div className="ms-2 me-auto">
+                  <div className="ms-2 me-auto" style={{ maxWidth: '85%' }}>
                     <div className="fw-bold">{info.name}</div>
                     {x.body}
                   </div>
                   <div className='d-flex flex-column align-items-end gap-2'>
-                    <span className="badge text-bg-light rounded-pill">&nbsp;{moment.unix(x.timestamp).format('hh:mm')}&nbsp;</span>
+                    <span className="badge text-bg-light rounded-pill">&nbsp;{moment.unix(x.timestamp).format('DD/MM/YY hh:mm')}&nbsp;</span>
                     {x.hasMedia && (
                       <button type='button' className='btn btn-secondary align-self-end' onClick={e => onMediaClick(x.id._serialized)}>Ver mídia</button>
                     )}
