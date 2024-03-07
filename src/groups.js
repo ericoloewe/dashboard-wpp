@@ -76,7 +76,7 @@ export function Groups() {
   }, [participantsDict]);
 
   return <Layout>
-    <div className='container' style={{ paddingBottom: 30 }}>
+    <div className='container' style={{ paddingBottom: 30, paddingTop: 30 }}>
       {isGroupsReady
         ? (
           <div className='home'>
@@ -107,11 +107,11 @@ export function Groups() {
 
 export function Card({ participant, groupId }) {
   return (
-    <Link to={`/groups/${groupId}/${participant.id._serialized}`} className="card">
+    <button type='button' className="card" onClick={e => window.electronAPI.send('new-window', { hash: `/groups/${groupId}/${participant.id._serialized}?newWindow` })}>
       <img src={participant.profilePicture || './no-profile.jpg'} alt={participant?.contact?.name} className='card-img' />
       <h4>{participant?.contact?.name}</h4>
       <hr />
       <h6>Quantidade de mensagens: {participant.messages?.length}</h6>
-    </Link>
+    </button>
   );
 }

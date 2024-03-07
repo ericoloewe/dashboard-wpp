@@ -2,8 +2,9 @@ const { app, BrowserWindow } = require('electron');
 const path = require('node:path');
 const isDev = require('./is-dev');
 
+require("@electron/remote/main").initialize();
+
 function createWindow(hash = '#') {
-  require("@electron/remote/main").initialize();
   // modify your existing createWindow() function
   const createWindow = () => {
     const win = new BrowserWindow({

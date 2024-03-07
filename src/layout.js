@@ -1,13 +1,15 @@
-import { Link, useHref } from 'react-router-dom';
+import { Link, useHref, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import './layout.scss';
 import { useState } from 'react';
 import { useEnv } from './contexts/env';
 
 
 export function Layout({ children }) {
+  const { search } = useLocation();
+
   return (
     <>
-      <Header />
+      {search.includes('newWindow') ? null : <Header />}
       {children}
     </>
   );

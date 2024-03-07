@@ -7,15 +7,18 @@ const EnvContext = createContext({
 
 export function EnvProvider(props) {
   const [isDev, setIsDev] = useState(false);
+  const [logLevel, setLogLevel] = useState('info');
 
   useEffect(() => {
     setIsDev(process.env.NODE_ENV === 'development')
+    setLogLevel(process.env.LOG_LEVEL)
   }, [process.env]);
 
   return (
     <EnvContext.Provider
       value={{
         isDev,
+        logLevel,
       }}
       {...props}
     />

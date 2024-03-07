@@ -29,9 +29,10 @@ export function Participants() {
       setIsReady(true);
     })
 
-    const removeEventListener2 = window.electronAPI.on('participant-messages-loaded', (event, response) => {
-      console.debug(response);
-      setMessages(response);
+    const removeEventListener2 = window.electronAPI.on('participant-messages-loaded', (event, messages) => {
+      console.info(messages);
+
+      setMessages(messages);
       setIsMessagesLoading(false);
     })
 
@@ -84,10 +85,10 @@ export function Participants() {
   }
 
   return <Layout>
-    <div className='container'>
+    <div className='container' style={{ paddingBottom: 30, paddingTop: 30 }}>
       {isReady
         ? (
-          <div className='home d-flex flex-column gap-3' style={{ paddingBottom: 40 }}>
+          <div className='home d-flex flex-column gap-3'>
             <div className='d-flex justify-content-between'>
               <h2>Participante: {info.name}</h2>
               <button className='btn btn-secondary' onClick={e => navigate(-1)}>Voltar</button>

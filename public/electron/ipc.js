@@ -111,6 +111,18 @@ customIpcMain.on('load-participant-messages', async (event, { groupId, participa
   const win = BrowserWindow.fromWebContents(webContents);
   const chat = await client.getChatById(groupId);
   const messages = await chat.fetchMessages({ limit: 1000 });
+
+  for (let index = 0; index < messages.length; index++) {
+    const message = messages[index];
+
+    for (let j = 0; j < message.mentionedIds.length; j++) {
+      const user = message.mentionedIds[j];
+
+      user.contact = await client.getContactById(user._serialized)
+      message.body = message.body.replaceAll(`@${user?.user}`, `@${user?.contact?.name}`)
+    }
+  }
+
   // console.log(messages);
   win.webContents.send('participant-messages-loaded', messages.filter(x => x.author === participantId));
 });
@@ -126,11 +138,14 @@ customIpcMain.on('load-media', async (event, messageId) => {
 });
 
 customIpcMain.on('logging', async (event, { type, args }) => {
-  console[type](...args);
+  if (type === 'debug')
+    console[type]('renderer', args);
+  else
+    console[type]('renderer', ...args);
 });
 
 customIpcMain.on('new-window', async (event, { hash }) => {
-  createWindow(hash);
+  createWindow(`#${hash}`);
 });
 
 async function runReady(win) {

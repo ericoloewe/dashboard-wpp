@@ -54,10 +54,10 @@ export function Home() {
 
 export function Card({ group }) {
   return (
-    <Link to={`/groups/${group.id._serialized}`} className="card">
+    <button type='button' className="card" onClick={e => window.electronAPI.send('new-window', { hash: `/groups/${group.id._serialized}?newWindow` })}>
       <img src={group.profilePicture || './no-profile.jpg'} alt={group.name} />
       <h4>{group.name}</h4>
       <hr />
-    </Link>
+    </button>
   );
 }
