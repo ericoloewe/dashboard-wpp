@@ -16,7 +16,7 @@ function Header() {
   const href = useHref();
   const [show, setShow] = useState(false);
 
-  return <header className="navbar navbar-expand-sm">
+  return <header className="navbar navbar-expand-sm bg-light">
     <div className="container-fluid">
       <Link
         to="/home"
