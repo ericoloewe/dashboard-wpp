@@ -11,14 +11,17 @@
 // required to get $orange variable
 
 $white: #ffffff;
-$light: #d7e5f4;
-$dark: #0e1f33;
-$primary: #104485;
-$secondary: #ac5a2f;
-$info: #fd6f48;
-$success: #09a35d;
-$warning: #e2ca0a;
-$danger: #f21503;
+$light: #d1daf5;
+$dark: #1e512f;
+$primary: #0f466e;
+$secondary: #1c65aa;
+$info: #5991cc;
+$accent1: #ef9805;
+$accent2: #de6d26;
+$accent3: #a0b7cc;
+$success: #02b262;
+$warning: #e8ce01;
+$danger: #fb0401;
 
 $theme-colors: (
   "light": $light,
@@ -26,6 +29,9 @@ $theme-colors: (
   "primary": $primary,
   "secondary": $secondary,
   "info": $info,
+  "accent1": $accent1,
+  "accent2": $accent2,
+  "accent3": $accent3,
   "success": $success,
   "warning": $warning,
   "danger": $danger,
