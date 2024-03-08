@@ -3,6 +3,7 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const { performance } = require('perf_hooks');
 const { createWindow } = require('./window');
 const path = require('path');
+const { homedir } = require('os')
 
 /**
  * @type {import('whatsapp-web.js').Client}
@@ -40,7 +41,7 @@ customIpcMain.on('init-login', (event) => {
 
   client = new Client({
     authStrategy: new LocalAuth({
-      dataPath: process.env.NODE_ENV === 'production' ? path.join(__dirname, '../Common/dashboard-gestao') : undefined
+      dataPath: path.join(homedir(), './.config/dashboard-gestao/.wwebjs_auth/')
     }),
   });
 
