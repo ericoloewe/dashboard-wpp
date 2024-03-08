@@ -8,6 +8,7 @@ import { Groups } from './groups';
 import { Login } from './login';
 import { Participants } from './participants';
 import { AppProviders } from './contexts';
+import { Logout } from './logout';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -18,6 +19,10 @@ if (typeof (window.electronAPI) === 'undefined') {
     {
       path: "/home",
       element: <Home />,
+    },
+    {
+      path: "/logout",
+      element: <Logout />,
     },
     {
       path: "/groups/:groupId",

@@ -137,6 +137,15 @@ customIpcMain.on('load-media', async (event, messageId) => {
   win.webContents.send('media-loaded', media);
 });
 
+customIpcMain.on('logout', async (event, message) => {
+  const webContents = event.sender;
+  const win = BrowserWindow.fromWebContents(webContents);
+
+  await client.logout();
+
+  win.webContents.send('logout-ok', { success: true });
+});
+
 customIpcMain.on('logging', async (event, { type, args }) => {
   if (type === 'debug')
     console[type]('renderer', args);
@@ -150,5 +159,5 @@ customIpcMain.on('new-window', async (event, { hash }) => {
 
 async function runReady(win) {
   console.log('Client is ready!');
-  win.webContents.send('whats-ready', 'ok');
+  win.webContents.send('whats-ready', { success: true });
 }

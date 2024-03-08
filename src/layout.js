@@ -4,12 +4,12 @@ import { useState } from 'react';
 import { useEnv } from './contexts/env';
 
 
-export function Layout({ children }) {
+export function Layout({ children, noHeader = false }) {
   const { search } = useLocation();
 
   return (
     <>
-      {search.includes('newWindow') ? null : <Header />}
+      {noHeader || search.includes('newWindow') ? null : <Header />}
       {children}
     </>
   );
@@ -29,9 +29,6 @@ function Header() {
       >
         Dashboard gestão
       </Link>
-      <button className="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" onClick={e => setShow(!show)}>
-        <span className="navbar-toggler-icon"></span>
-      </button>
       <div className={`collapse navbar-collapse ${show && 'show'}`} id="navbarSupportedContent">
         <ul className="navbar-nav">
           <li className="nav-item">
@@ -42,9 +39,15 @@ function Header() {
               <Link className={`nav-link ${href === '/' ? 'active' : ''}`} to={'/'}>Login</Link>
             </li>)
           }
+          <li className="nav-item">
+            <Link className={`nav-link ${href === '/logout' ? 'active' : ''}`} to={'/logout'}>Sair</Link>
+          </li>
         </ul>
       </div>
       <span>Versão {version}</span>
+      <button className="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" onClick={e => setShow(!show)}>
+        <span className="navbar-toggler-icon"></span>
+      </button>
     </div>
   </header>;
 
