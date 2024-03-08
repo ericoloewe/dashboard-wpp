@@ -53,8 +53,8 @@ customIpcMain.on('load-chats', async (event, groupId) => {
   const win = BrowserWindow.fromWebContents(webContents);
   const response = await client.getChats();
   console.info('end getChats!');
-  const groups = response.filter(x => x.isGroup).slice(0, 9);
-  const profilesPromises = groups.map(x => client.getProfilePicUrl(x.id._serialized));
+  const groups = response.filter(x => x.isGroup);
+  const profilesPromises = groups.slice(0, 9).map(x => client.getProfilePicUrl(x.id._serialized));
 
   const pictures = await Promise.all(profilesPromises);
 

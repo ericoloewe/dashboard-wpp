@@ -93,6 +93,7 @@ export function Participants() {
             </div>
             <br />
             {isMessagesLoading ? <Loader /> : <Messages messages={messages} info={info} onMediaClick={onMediaClick} />}
+            {!isMessagesLoading && messages.length === 0 && <div className="alert alert-info" role="alert">Nenhuma mensagem disponivel.</div>}
             {(isMediaModalOpen) && <Modal title="Mídia" onClose={onCloseModal}>
               {isMediaLoading
                 ? <Loader />
