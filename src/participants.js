@@ -13,6 +13,7 @@ export function Participants() {
   const [info, setInfo] = useState({});
   const [messages, setMessages] = useState([]);
   const [media, setMedia] = useState();
+  const [limit, setLimit] = useState(1000);
 
   useEffect(() => {
     let firstLoadOk = false;
@@ -21,7 +22,7 @@ export function Participants() {
       console.debug(response);
       setInfo(response);
 
-      window.electronAPI.send('load-participant-messages', { groupId, participantId });
+      window.electronAPI.send('load-participant-messages', { groupId, participantId, limit });
 
       firstLoadOk = true;
 
@@ -29,7 +30,7 @@ export function Participants() {
     })
 
     const removeEventListener2 = window.electronAPI.on('participant-messages-loaded', (event, messages) => {
-      console.info(messages);
+      console.debug(messages);
 
       setMessages(messages);
       setIsMessagesLoading(false);
@@ -53,9 +54,9 @@ export function Participants() {
   }, [participantId]);
 
   useEffect(() => {
-    if (isReady && messages.length > 0)
+    if (isReady && !isMessagesLoading)
       window.scrollTo(0, document.body.scrollHeight);
-  }, [isReady, messages]);
+  }, [isReady, isMessagesLoading]);
 
   function onMediaClick(messageId) {
     window.electronAPI.send('load-media', messageId);

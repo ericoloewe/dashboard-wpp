@@ -90,11 +90,11 @@ customIpcMain.on('load-group-info', async (event, groupId) => {
 
   win.webContents.send('group-info-loaded', chat);
 });
-customIpcMain.on('load-group-messages', async (event, groupId) => {
+customIpcMain.on('load-group-messages', async (event, { groupId, limit }) => {
   const webContents = event.sender;
   const win = BrowserWindow.fromWebContents(webContents);
   const chat = await client.getChatById(groupId);
-  const messages = await chat.fetchMessages({ limit: 50 });
+  const messages = await chat.fetchMessages({ limit: limit || 200 });
 
   // console.log(messages);
   win.webContents.send('group-messages-loaded', messages);
@@ -106,11 +106,11 @@ customIpcMain.on('load-participant-info', async (event, participantId) => {
   // console.log(messages);
   win.webContents.send('participant-info-loaded', contact);
 });
-customIpcMain.on('load-participant-messages', async (event, { groupId, participantId }) => {
+customIpcMain.on('load-participant-messages', async (event, { groupId, participantId, limit }) => {
   const webContents = event.sender;
   const win = BrowserWindow.fromWebContents(webContents);
   const chat = await client.getChatById(groupId);
-  const messages = await chat.fetchMessages({ limit: 1000 });
+  const messages = await chat.fetchMessages({ limit: limit || 1000 });
 
   for (let index = 0; index < messages.length; index++) {
     const message = messages[index];

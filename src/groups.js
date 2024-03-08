@@ -10,6 +10,7 @@ export function Groups() {
   const [search, setSearch] = useState('');
   const [groupInfo, setGroupInfo] = useState({});
   const [participantsDict, setParticipantsDict] = useState({});
+  const [limit, setLimit] = useState(200);
   const [lastUpdate, setLastUpdate] = useState(new Date());
 
   useEffect(() => {
@@ -28,7 +29,7 @@ export function Groups() {
 
       setParticipantsDict({ ...dict });
 
-      window.electronAPI.send('load-group-messages', groupId);
+      window.electronAPI.send('load-group-messages', { groupId, limit });
 
       firstLoadOk = true;
 
@@ -56,7 +57,7 @@ export function Groups() {
 
     const interval = setInterval(() => {
       if (firstLoadOk)
-        window.electronAPI.send('load-group-messages', groupId);
+        window.electronAPI.send('load-group-messages', { groupId, limit });
     }, 5000);
 
 
