@@ -2,6 +2,7 @@ const { BrowserWindow, ipcMain } = require('electron');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const { performance } = require('perf_hooks');
 const { createWindow } = require('./window');
+const path = require('path');
 
 /**
  * @type {import('whatsapp-web.js').Client}
@@ -37,7 +38,11 @@ customIpcMain.on('init-login', (event) => {
   if (client !== null)
     return runReady(win, client);
 
-  client = new Client({ authStrategy: new LocalAuth() });
+  client = new Client({
+    authStrategy: new LocalAuth({
+      dataPath: process.env.NODE_ENV === 'production' ? path.join(__dirname, '../Common/dashboard-gestao') : undefined
+    }),
+  });
 
   client.on('qr', (qr) => {
     win.webContents.send('qrcode-loaded', qr);
