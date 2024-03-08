@@ -1,5 +1,7 @@
 import React, { createContext, useState, useEffect } from "react"
 
+const { version: packageVersion } = require('../../package.json');
+
 
 const EnvContext = createContext({
   isDev: false
@@ -8,10 +10,12 @@ const EnvContext = createContext({
 export function EnvProvider(props) {
   const [isDev, setIsDev] = useState(false);
   const [logLevel, setLogLevel] = useState('info');
+  const [version, setVersion] = useState(packageVersion);
 
   useEffect(() => {
     setIsDev(process.env.NODE_ENV === 'development')
     setLogLevel(process.env.LOG_LEVEL)
+    setVersion(packageVersion);
   }, [process.env]);
 
   return (
@@ -19,6 +23,7 @@ export function EnvProvider(props) {
       value={{
         isDev,
         logLevel,
+        version
       }}
       {...props}
     />

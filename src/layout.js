@@ -18,7 +18,7 @@ export function Layout({ children }) {
 function Header() {
   const href = useHref();
   const [show, setShow] = useState(false);
-  const { isDev } = useEnv();
+  const { isDev, version } = useEnv();
 
   return <header className="navbar navbar-expand-sm bg-light">
     <div className="container-fluid">
@@ -44,6 +44,7 @@ function Header() {
           }
         </ul>
       </div>
+      <span>Versão {version}</span>
     </div>
   </header>;
 
