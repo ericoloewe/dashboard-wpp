@@ -3,6 +3,9 @@ import { Layout } from './layout';
 import { Link } from 'react-router-dom';
 import { Loader } from './loader';
 
+
+let alreadyLoaded = false;
+
 export function Home() {
   const [isGroupsReady, setIsGroupsReady] = useState(false);
   const [groups, setGroups] = useState([]);
@@ -18,7 +21,10 @@ export function Home() {
       setIsGroupsReady(true);
     })
 
-    window.electronAPI.send('load-chats', 'ok');
+    if (!alreadyLoaded) {
+      alreadyLoaded = true;
+      window.electronAPI.send('load-chats', 'ok');
+    }
 
     return () => {
       removeEventListener1();
