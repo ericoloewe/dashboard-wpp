@@ -1,11 +1,13 @@
 const { app } = require('electron');
 const { autoUpdater } = require("electron-updater");
 
-Object.defineProperty(app, 'isPackaged', {
-  get() {
-    return true;
-  }
-});
+if (process.env.NODE_ENV !== 'production') {
+  Object.defineProperty(app, 'isPackaged', {
+    get() {
+      return true;
+    }
+  });
+}
 
 autoUpdater.setFeedURL({
   provider: 'github',
